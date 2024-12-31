@@ -15,7 +15,6 @@ Before you begin, ensure you have the following installed on your system:
 1. **Git**: [Download Git](https://git-scm.com/)
 2. **Python (3.8 or higher)**: [Download Python](https://www.python.org/downloads/)
 3. **pip**: Comes with Python installation.
-4. Any other dependencies mentioned in the `requirements.txt` file.
 
 ---
 
