@@ -63,6 +63,7 @@ Before running the AI, you need to pull the required models that enable user que
    ```
 ---
 
+### Usage
 ### Running the AI Application
 
 #### 1. Start the AI
@@ -76,6 +77,17 @@ streamlit run app.py
 #### 2. Testing the AI
 
 After starting the AI, you can interact with it via the terminal or through the user interface (if available). The models `llama3.2` and `phi3` will be utilized to provide responses.
+
+---
+### Examples
+#### 1. Input a query:
+```bash
+What is the capital of France?
+```
+AI Response:
+```bash
+The capital of France is Paris.
+```
 
 ---
 
