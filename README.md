@@ -114,7 +114,7 @@ If you encounter any issues, please raise them on the GitHub Issues page for thi
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the Apache License. See the LICENSE file for more details.
 
 ---
 
