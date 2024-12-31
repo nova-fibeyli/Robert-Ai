@@ -28,8 +28,10 @@ To get started, clone the repository from GitHub:
 ```bash
 git clone git@github.com:nova-fibeyli/Robert-Ai.git
 ```
-2. 
-
+2. HTTPS key:
+```bash
+https://github.com/nova-fibeyli/Robert-Ai.git
+```
 Alternatively, you can download the ZIP file of the repository:
 
 1. Go to the repository page on GitHub.
