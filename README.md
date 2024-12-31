@@ -61,15 +61,6 @@ Before running the AI, you need to pull the required models that enable user que
    ```bash
    ollama pull phi3
    ```
-
-#### 4. Pull the Latest Changes
-
-If you have already cloned the repository earlier, ensure you pull the latest changes:
-
-```bash
-git pull origin main
-```
-
 ---
 
 ### Running the AI Application
@@ -86,6 +77,7 @@ streamlit run app.py
 
 After starting the AI, you can interact with it via the terminal or through the user interface (if available). The models `llama3.2` and `phi3` will be utilized to provide responses.
 
+---
 
 ### Additional Information
 
@@ -107,6 +99,8 @@ Logs are stored in the `logs/` directory. Check this directory for debugging or 
 - **Dependency Errors**: Ensure all dependencies in `requirements.txt` are installed.
 - **Python Version Issues**: Check your Python version and upgrade if necessary.
 - **Git Errors**: Ensure your Git credentials are configured properly.
+  
+---
 
 ### Support
 
