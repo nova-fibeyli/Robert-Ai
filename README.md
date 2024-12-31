@@ -29,7 +29,7 @@ git clone git@github.com:nova-fibeyli/Robert-Ai.git
 ```
 2. HTTPS key:
 ```bash
-https://github.com/nova-fibeyli/Robert-Ai.git
+git clone https://github.com/nova-fibeyli/Robert-Ai.git
 ```
 Alternatively, you can download the ZIP file of the repository:
 
