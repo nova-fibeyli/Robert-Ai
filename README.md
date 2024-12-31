@@ -24,10 +24,11 @@ Before you begin, ensure you have the following installed on your system:
 #### 1. Clone the Repository
 
 To get started, clone the repository from GitHub:
-
+1. SSH key:
 ```bash
-git clone <repository-url>
+git clone git@github.com:nova-fibeyli/Robert-Ai.git
 ```
+2. 
 
 Alternatively, you can download the ZIP file of the repository:
 
