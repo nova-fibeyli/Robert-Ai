@@ -4,6 +4,8 @@ from pymongo import MongoClient
 import logging
 import time
 import ollama
+import pandas as pd
+import fitz  # PyMuPDF for PDF processing
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -13,10 +15,21 @@ client = MongoClient("mongodb+srv://AdvancedProgramming:AdvancedProgramming@clus
 db = client.support_bot
 dialogue_collection = db.dialogues
 
+# Function to load dataset into MongoDB
+def load_dataset():
+    try:
+        train_data = pd.read_csv("EmpatheticDialogues/train.csv")
+        dialogues = train_data[["prompt", "utterance"]].drop_duplicates().dropna()
+        dialogue_collection.insert_many(dialogues.to_dict(orient="records"), ordered=False)
+        logging.info("EmpatheticDialogues dataset loaded into MongoDB.")
+    except Exception as e:
+        logging.info("Dataset already exists or encountered an error.")
+load_dataset()
+
 # Function to find response from MongoDB
 def find_response(user_input):
     result = dialogue_collection.find_one({"prompt": {"$regex": user_input, "$options": "i"}})
-    return result["utterance"] if result else None
+    return result["utterance"] if result else "I am here to listen and help you. Please tell me more."
 
 # Function to store query and response in MongoDB
 def store_query_response(user_input, assistant_response):
@@ -34,7 +47,7 @@ def stream_chat(model, messages):
         if not user_input:
             return "I didn’t catch that. Could you say it again?"
 
-        mongo_response = find_response(user_input) or "I am here to listen and help you. Please tell me more."
+        mongo_response = find_response(user_input)
         logging.info(f"MongoDB Response: {mongo_response}")
 
         formatted_messages = [
@@ -44,98 +57,57 @@ def stream_chat(model, messages):
         ]
 
         response = ollama.chat(model=model, messages=formatted_messages)
-        logging.info(f"Ollama Response: {response}")
-
-        if response and hasattr(response, 'message') and hasattr(response.message, 'content'):
-            return response.message.content
-        else:
-            logging.error("Ollama response structure is invalid.")
-            return "I'm sorry, I couldn't process your request. Could you please rephrase?"
-
+        return response.message.content if response and hasattr(response, 'message') and hasattr(response.message, 'content') else "I'm sorry, I couldn't process your request."
+    
     except Exception as e:
         logging.error(f"Error during streaming: {str(e)}")
         return "An error occurred. Please try again later."
+
+# Function to handle file upload
+def handle_file_upload(uploaded_file):
+    if uploaded_file is not None:
+        file_type = uploaded_file.name.split(".")[-1]
+        if file_type == "pdf":
+            doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+            file_text = "\n".join([page.get_text("text") for page in doc])
+        else:
+            file_text = uploaded_file.read().decode("utf-8", errors="ignore")
+        return file_text[:500]  # Preview the first 500 characters
+    return ""
 
 # Main app function
 def main():
     st.title("Chat with Robert ['-']")
     logging.info("App started")
 
-    # Session state to store messages
     if 'messages' not in st.session_state:
         st.session_state.messages = []
 
     model = st.sidebar.selectbox("Choose a model", ["llama3.2", "phi3"])
     logging.info(f"Model selected: {model}")
 
-    # Display messages (newest first)
     for message in reversed(st.session_state.messages):
         with st.chat_message(message.role):
             st.write(message.content)
 
-    # Add input section at the bottom of the page
-    st.markdown(
-        """
-        <style>
-        .fixed-bottom {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #f9f9f9;
-            padding: 10px 15px;
-            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        .message-area {
-            padding-bottom: 70px;  /* To make space for the fixed input area */
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    prompt = st.text_input("Enter your question:", key="user_prompt")
+    uploaded_file = st.file_uploader("Upload a file", type=["txt", "pdf", "docx"])
+    send_button = st.button("Send")
 
-    # Display message area with padding to avoid overlap with input section
-    st.markdown('<div class="message-area">', unsafe_allow_html=True)
-
-    # Validate and display input components
-    col1, col2, col3 = st.columns([3, 1, 1])
-
-    with col1:
-        prompt = st.text_input("Enter your question:", key="user_prompt")
-
-    with col2:
-        send_button = st.button("Send")
-
-    with col3:
-        uploaded_file = st.file_uploader("Upload a file", type=["txt", "pdf", "docx"])
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Validate input and file upload
     if send_button:
-        if not prompt:
-            st.error("Please enter text to send a message.")
-        elif uploaded_file:
-            file_details = {
-                "filename": uploaded_file.name,
-                "filetype": uploaded_file.type,
-                "filesize": uploaded_file.size,
-            }
-            st.session_state.messages.append(ChatMessage(role="user", content=f"{prompt} (Uploaded file: {file_details})"))
-            logging.info(f"User uploaded file with message: {prompt} | {file_details}")
-        else:
-            st.session_state.messages.append(ChatMessage(role="user", content=prompt))
-            logging.info(f"User input: {prompt}")
+        file_text = handle_file_upload(uploaded_file)
+        full_prompt = f"{prompt}\n\n[File Content Preview]: {file_text}" if file_text else prompt
 
-        # Generate assistant response after input is sent
-        if st.session_state.messages and st.session_state.messages[-1].role == "user":
+        if not full_prompt.strip():
+            st.error("Please enter text or upload a file.")
+        else:
+            st.session_state.messages.append(ChatMessage(role="user", content=full_prompt))
+            logging.info(f"User input: {full_prompt}")
+
             with st.chat_message("assistant"):
                 response_container = st.empty()
                 response_text = ""
-
                 start_time = time.time()
-                logging.info("Generating response")
 
                 with st.spinner("Generating response..."):
                     try:
@@ -152,9 +124,7 @@ def main():
                         st.session_state.messages.append(ChatMessage(role="assistant", content=response_text))
                         logging.info(f"Response: {response_text}, Duration: {duration:.2f} sec.")
 
-                        if prompt:
-                            store_query_response(prompt, response_text)
-
+                        store_query_response(full_prompt, response_text)
                     except Exception as e:
                         error_message = f"Error: {str(e)}"
                         st.session_state.messages.append(ChatMessage(role="assistant", content=error_message))
@@ -163,4 +133,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
