@@ -1,131 +1,60 @@
-# Robert AI
+# Robert-Ai: Empathic Emotional Support Robo Friend
 
 ## Overview
 
-Robert AI is a project designed to provide an efficient and scalable AI solution. This README provides a step-by-step guide on how to clone, set up, and run the project locally. Additionally, it includes instructions to pull required models (`llama3.2`, `phi3`) for optimal functionality and enable them to respond to user queries.
+Robert-Ai is an innovative application designed to provide empathetic emotional support. This bot combines cutting-edge technologies to deliver meaningful and helpful interactions for users seeking companionship and understanding.
 
----
+## Key Features
 
-## Getting Started
+- **Python-Powered**: Developed using Python, a versatile and robust programming language.
+- **MongoDB Integration**: Utilizes MongoDB to store and retrieve conversational data for context-aware responses.
+- **Streamlit Framework**: A user-friendly interface built with Streamlit for seamless interaction.
+- **Ollama Integration**: Incorporates Ollama's advanced AI models for generating empathetic and human-like responses.
 
-### Prerequisites
+## Installation
 
-Before you begin, ensure you have the following installed on your system:
-
-1. **Git**: [Download Git](https://git-scm.com/)
-2. **Python (3.8 or higher)**: [Download Python](https://www.python.org/downloads/)
-3. **pip**: Comes with Python installation.
-
----
-
-### Installation
-
-#### 1. Clone the Repository
-
-To get started, clone the repository from GitHub:
-1. SSH key:
-```bash
-git clone git@github.com:nova-fibeyli/Robert-Ai.git
-```
-2. HTTPS key:
-```bash
-git clone https://github.com/nova-fibeyli/Robert-Ai.git
-```
-Alternatively, you can download the ZIP file of the repository:
-
-1. Go to the repository page on GitHub.
-2. Click the **Code** button.
-3. Select **Download ZIP**.
-4. Extract the ZIP file to your desired directory.
-
-#### 2. Navigate to the Project Directory
-
-Change into the project directory:
-
-```bash
-cd robert-ai
-```
-
-#### 3. Pull Required Models
-
-Before running the AI, you need to pull the required models that enable user query responses:
-
-1. Pull the `llama3.2` model:
-
+1. Clone the repository:
    ```bash
-   ollama pull llama3.2
+   git clone https://github.com/nova-fibeyli/Robert-Ai.git
+   cd Robert-Ai
    ```
 
-2. Pull the `phi3` model:
-
+2. Install the required dependencies:
    ```bash
-   ollama pull phi3
+   pip install -r requirements.txt
    ```
----
 
-### Usage
-### Running the AI Application
+## Usage
 
-#### 1. Start the AI
+1. Start the application by running:
+   ```bash
+   streamlit run src/app.py
+   ```
 
-To start Robert AI, run the main application script:
+2. Enter your questions or messages, and Robert-Ai will respond empathetically.
 
-```bash
-streamlit run app.py
-```
+## Examples
 
-#### 2. Testing the AI
+Ask a question like:
+> "How are you feeling today?"
 
-After starting the AI, you can interact with it via the terminal or through the user interface (if available). The models `llama3.2` and `phi3` will be utilized to provide responses.
+The bot will provide a thoughtful response, leveraging its training data and advanced AI models.
 
----
-### Examples
-#### 1. Input a query:
-```bash
-What is the capital of France?
-```
-AI Response:
-```bash
-The capital of France is Paris.
-```
+## Technologies Used
 
----
+- **Python**: The backbone of this application for efficient scripting and development.
+- **MongoDB**: A NoSQL database to store conversation history and facilitate dynamic responses.
+- **Streamlit**: An interactive and intuitive framework for creating a friendly UI.
+- **Ollama**: Advanced AI language models that enhance Robert-Ai's conversational capabilities.
 
-### Additional Information
+## Contributing
 
-#### Configuration
-
-- Configuration files (if any) are located in the `config/` directory.
-- Update the configuration as per your requirements before starting the application.
-
-#### Logs
-
-Logs are stored in the `logs/` directory. Check this directory for debugging or tracking AI behavior.
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-- **Dependency Errors**: Ensure all dependencies in `requirements.txt` are installed.
-- **Python Version Issues**: Check your Python version and upgrade if necessary.
-- **Git Errors**: Ensure your Git credentials are configured properly.
-  
----
-
-### Support
-
-If you encounter any issues, please raise them on the GitHub Issues page for this repository.
-
----
+Contributions are welcome! Feel free to fork this repository and submit a pull request.
 
 ## License
 
-This project is licensed under the Apache License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
----
+## Repository
 
-Thank you for using Robert AI!
-
-
+Visit the project repository at [Robert-Ai GitHub Repository](https://github.com/nova-fibeyli/Robert-Ai.git).
